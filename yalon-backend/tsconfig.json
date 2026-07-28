@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "ignoreDeprecations": "6.0",
+    "module": "NodeNext",          //  Changed from commonjs
+    "moduleResolution": "NodeNext",  //  Changed from bundler
     "lib": ["ES2022"],
     "outDir": "dist",
     "rootDir": ".",
