@@ -10,8 +10,7 @@ const envSchema = z.object({
   SUPABASE_URL: z.string().url(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
 
-  BREVO_SMTP_USER: z.string().min(1),
-  BREVO_SMTP_PASS: z.string().min(1),
+  BREVO_API_KEY: z.string().min(1),
   SENDER_EMAIL: z.string().email(),
   RECEIVER_EMAIL: z.string().email(),
 

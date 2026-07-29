@@ -1,7 +1,8 @@
-import { transporter } from '../config/mailer';
+import { BrevoClient } from '@getbrevo/brevo';
+import fs from 'fs';
+import path from 'path';
 import { env } from '../config/env';
 import { logger } from '../utils/logger';
-import path from 'path';
 
 interface SendNotificationParams {
   subject: string;
@@ -9,19 +10,28 @@ interface SendNotificationParams {
   replyTo: string;
 }
 
+// Brevo client — configured once at module load, reused across requests.
+const brevo = new BrevoClient({ apiKey: env.BREVO_API_KEY });
+
+// Logo is a static file that never changes at runtime — read it once into
+// memory instead of hitting disk on every request like the old code did.
+const LOGO_PATH = path.join(__dirname, '..', '..', 'assets', 'yalon-logo-email.png');
+const LOGO_BASE64 = fs.readFileSync(LOGO_PATH).toString('base64');
+
 export async function sendNotificationEmail({ subject, html, replyTo }: SendNotificationParams): Promise<void> {
   try {
-    await transporter.sendMail({
-      from: `"Yalon Professional Staffing Solutions" <${env.SENDER_EMAIL}>`,
-      to: env.RECEIVER_EMAIL,
-      replyTo,
+    await brevo.transactionalEmails.sendTransacEmail({
+      sender: { name: 'Yalon Professional Staffing Solutions', email: env.SENDER_EMAIL },
+      to: [{ email: env.RECEIVER_EMAIL }],
+      replyTo: { email: replyTo },
       subject,
-      html,
-      attachments: [
+      htmlContent: html,
+      // Inline logo — same cid:yalonlogo reference your templates already use.
+      // Brevo matches attachment.name against the cid the template points to.
+      attachment: [
         {
-          filename: 'yalon-logo.png',
-          path: path.join(__dirname, '..', '..', 'assets', 'yalon-logo-email.png'),
-          cid: 'yalonlogo',
+          content: LOGO_BASE64,
+          name: 'yalonlogo',
         },
       ],
     });
