@@ -31,7 +31,7 @@ export async function sendNotificationEmail({ subject, html, replyTo }: SendNoti
       attachment: [
         {
           content: LOGO_BASE64,
-          name: 'yalonlogo',
+          name: 'yalonlogo.png',
         },
       ],
     });
