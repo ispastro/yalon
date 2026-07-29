@@ -14,8 +14,8 @@ interface SendNotificationParams {
 const brevo = new BrevoClient({ apiKey: env.BREVO_API_KEY });
 
 // Logo is a static file that never changes at runtime — read it once into
-// memory instead of hitting disk on every request like the old code did.
-const LOGO_PATH = path.join(__dirname, '..', '..', 'assets', 'yalon-logo-email.png');
+// memory using process.cwd() so it resolves correctly from the project root on Render.
+const LOGO_PATH = path.join(process.cwd(), 'assets', 'yalon-logo-email.png');
 const LOGO_BASE64 = fs.readFileSync(LOGO_PATH).toString('base64');
 
 export async function sendNotificationEmail({ subject, html, replyTo }: SendNotificationParams): Promise<void> {
