@@ -9,12 +9,22 @@ import { logger } from './utils/logger';
 
 export const app = express();
 
+// Build the origin allowlist from the env var.
+// ALLOWED_ORIGIN can be a single origin, a comma-separated list of origins,
+// or '*' for development. Examples:
+//   ALLOWED_ORIGIN=https://yalon.netlify.app
+//   ALLOWED_ORIGIN=https://yalon.netlify.app,https://admin.yalon.com
+const rawOrigins = env.ALLOWED_ORIGIN.split(',').map((o: string) => o.trim());
+const allowedOrigins: string[] | '*' =
+  rawOrigins.length === 1 && rawOrigins[0] === '*' ? '*' : rawOrigins;
+
 // --- Security & core middleware ---
 app.use(helmet());
 app.use(
   cors({
-    origin: env.ALLOWED_ORIGIN,
-    methods: ['GET', 'POST'],
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.use(express.json({ limit: '1mb' }));

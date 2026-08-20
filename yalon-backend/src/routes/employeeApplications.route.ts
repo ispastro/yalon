@@ -1,7 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { formRateLimiter } from '../middleware/rateLimiter';
 import { validateRequest } from '../middleware/validateRequest';
-import { upload } from '../middleware/uploadHandler';
+import { upload, checkTotalUploadSize } from '../middleware/uploadHandler';
 import { employeeApplicationSchema } from '../validators/employeeApplication.schema';
 import { submitEmployeeApplication } from '../controllers/employeeApplications.controller';
 import { asyncHandler } from '../utils/asyncHandler';
@@ -54,6 +54,7 @@ employeeApplicationsRouter.post(
   '/',
   formRateLimiter,
   documentUploadFields,
+  checkTotalUploadSize,
   parseMultipartFields,
   validateRequest(employeeApplicationSchema),
   asyncHandler(submitEmployeeApplication)
