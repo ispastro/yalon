@@ -6,7 +6,7 @@ Handles two form submissions:
 - **Customer Service Requests** (`POST /api/customer-requests`) — businesses requesting event/hospitality staffing
 - **Casual Employee Applications** (`POST /api/employee-applications`, multipart) — job applicants, with document uploads
 
-Stack: **Express + TypeScript**, **Supabase** (Postgres + Storage), **Brevo** (email via nodemailer), deployed on **Koyeb** (free tier, Frankfurt region).
+Stack: **Express + TypeScript**, **Supabase** (Postgres + Storage), **Brevo** (transactional email), deployed on **Render**.
 
 ## Setup
 
@@ -41,10 +41,16 @@ npm start             # runs compiled dist/server.js
 
 See `FOLDER_STRUCTURE.md` for the full layout and rationale.
 
-## Deployment (Koyeb, free tier)
+## Deployment (Render)
 
 1. Push this repo to GitHub.
-2. In Koyeb, create a new Web Service from the repo, region **Frankfurt**.
-3. Build command: `npm install && npm run build`
-4. Run command: `npm start`
-5. Add all `.env` variables as Koyeb environment variables/secrets (never commit `.env`).
+2. In Render, create a new **Web Service** from the repo.
+3. **Build command:** `npm install && npm run build`
+4. **Start command:** `npm start`
+5. Add all `.env` variables as Render environment variables (never commit `.env`).
+   - `NODE_ENV=production`
+   - `PORT` (Render sets this automatically — leave unset or match Render's value)
+   - `ALLOWED_ORIGIN` — your admin frontend URL, e.g. `https://your-admin.netlify.app`
+   - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+   - `BREVO_API_KEY`, `SENDER_EMAIL`, `RECEIVER_EMAIL`
+   - `EMPLOYEE_DOCS_BUCKET` (default: `employee-documents`)

@@ -12,7 +12,8 @@ export async function createCustomerRequest(input: CustomerRequestInput) {
     .single<{ id: string }>();
 
   if (error || !data) {
-    throw new AppError(`Failed to save request: ${error?.message ?? 'no data returned'}`, 500);
+    const cause = error?.message ?? error?.code ?? 'no data returned';
+    throw new AppError(`Failed to save request: ${cause}`, 500);
   }
 
   const { subject, html } = buildCustomerRequestEmail(input);

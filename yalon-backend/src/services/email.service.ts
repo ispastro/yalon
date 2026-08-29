@@ -13,27 +13,43 @@ interface SendNotificationParams {
 // Brevo client — configured once at module load, reused across requests.
 const brevo = new BrevoClient({ apiKey: env.BREVO_API_KEY });
 
-// Logo is a static file that never changes at runtime — read it once into
-// memory using process.cwd() so it resolves correctly from the project root on Render.
-const LOGO_PATH = path.join(process.cwd(), 'assets', 'yalon-logo-email.png');
-const LOGO_BASE64 = fs.readFileSync(LOGO_PATH).toString('base64');
+// Logo is loaded lazily on first use rather than at module load time.
+// A missing logo file should not crash the server — it just means emails
+// go out without the inline image, which is acceptable.
+let _logoBase64: string | null = null;
+
+function getLogoBase64(): string | null {
+  if (_logoBase64 !== null) return _logoBase64;
+  try {
+    const logoPath = path.join(process.cwd(), 'assets', 'yalon-logo-email.png');
+    _logoBase64 = fs.readFileSync(logoPath).toString('base64');
+  } catch (err) {
+    logger.warn({ err }, 'Logo file not found — emails will be sent without the inline logo');
+    _logoBase64 = ''; // cache the miss so we don't retry on every email
+  }
+  return _logoBase64 || null;
+}
 
 export async function sendNotificationEmail({ subject, html, replyTo }: SendNotificationParams): Promise<void> {
   try {
+    const logoBase64 = getLogoBase64();
+
     await brevo.transactionalEmails.sendTransacEmail({
       sender: { name: 'Yalon Professional Staffing Solutions', email: env.SENDER_EMAIL },
       to: [{ email: env.RECEIVER_EMAIL }],
       replyTo: { email: replyTo },
       subject,
       htmlContent: html,
-      // Inline logo — same cid:yalonlogo reference your templates already use.
-      // Brevo matches attachment.name against the cid the template points to.
-      attachment: [
-        {
-          content: LOGO_BASE64,
-          name: 'yalonlogo.png',
-        },
-      ],
+      ...(logoBase64
+        ? {
+            attachment: [
+              {
+                content: logoBase64,
+                name: 'yalonlogo.png',
+              },
+            ],
+          }
+        : {}),
     });
   } catch (err) {
     // Email failure should NOT fail the whole request — the submission is

@@ -4,6 +4,9 @@
   "description": "Yalon Professional Staffing Solutions — backend API",
   "main": "dist/server.js",
   "type": "commonjs",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc",

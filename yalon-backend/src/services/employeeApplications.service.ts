@@ -18,7 +18,8 @@ export async function createEmployeeApplication(input: EmployeeApplicationInput,
     .single<{ id: string }>();
 
   if (error || !data) {
-    throw new AppError(`Failed to save application: ${error?.message ?? 'no data returned'}`, 500);
+    const cause = error?.message ?? error?.code ?? 'no data returned';
+    throw new AppError(`Failed to save application: ${cause}`, 500);
   }
 
   const applicationId = data.id;
