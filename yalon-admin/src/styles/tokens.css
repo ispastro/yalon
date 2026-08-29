@@ -1,0 +1,36 @@
+/* ============================================================
+   YALON brand tokens — mirrors css/variables.css on the main
+   marketing site and the colors used in transactional emails.
+   Keep this file as the single source of truth for the palette.
+   ============================================================ */
+:root {
+  /* Core brand */
+  --forest: #0e3b29;       /* primary dark green — headers, nav, primary actions */
+  --forest-light: #145238;
+  --brass: #c9a15a;        /* gold accent — labels, dividers, "customer" identity */
+  --maroon: #a3443a;       /* secondary accent — "staff application" identity, distinct from brass */
+  --cream: #eee6d8;        /* page background */
+  --cream-light: #f6f1e7;  /* card/panel background */
+  --ink: #1c2b23;          /* primary text on light backgrounds */
+  --ink-muted: #6b6459;    /* secondary text */
+  --white: #ffffff;
+  --line: #e8ddc8;         /* hairline borders on cream */
+  --line-dark: rgba(255,255,255,0.12); /* hairline borders on forest */
+
+  /* Status colors — semantic, not brand, but kept muted to fit the palette */
+  --status-submitted: #6b6459;
+  --status-review: #b8862f;
+  --status-approved: #2f6b46;
+  --status-rejected: #a3443a;
+  --status-confirmed: #0e3b29;
+
+  /* Type */
+  --font-display: 'Anton', Impact, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --sidebar-width: 240px;
+  --radius: 6px;
+  --shadow-card: 0 1px 3px rgba(14,59,41,0.08);
+}

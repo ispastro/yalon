@@ -21,7 +21,7 @@ export async function requireStaff(req: Request, _res: Response, next: NextFunct
     return next(new AppError('Invalid or expired session token.', 401));
   }
 
-  const role = data.user.user_metadata?.role;
+  const role = data.user.app_metadata?.role;
   if (role !== 'staff') {
     return next(new AppError('Access denied. Staff role required.', 403));
   }

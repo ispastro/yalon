@@ -283,42 +283,43 @@ create policy "public can insert their own uploaded documents"
 -- exposed to the browser) or an authenticated 'staff' role can read.
 
 -- Authenticated Yalon staff (admin) can read/manage everything.
--- Assumes staff accounts are tagged with raw_user_meta_data->>'role' = 'staff'
--- via Supabase Auth, or you can swap this for a dedicated `staff_users` table.
+-- Staff accounts must have app_metadata->>'role' = 'staff' set via the
+-- service_role key (Supabase dashboard or migration SQL).
+-- NEVER use user_metadata for access control — users can write that themselves.
 
 create policy "staff can read customer requests"
   on customer_requests
   for select
   to authenticated
   using (
-    (auth.jwt() -> 'user_metadata' ->> 'role') = 'staff'
+    (auth.jwt() -> 'app_metadata' ->> 'role') = 'staff'
   );
 
 create policy "staff can update customer requests"
   on customer_requests
   for update
   to authenticated
-  using ((auth.jwt() -> 'user_metadata' ->> 'role') = 'staff')
-  with check ((auth.jwt() -> 'user_metadata' ->> 'role') = 'staff');
+  using  ((auth.jwt() -> 'app_metadata' ->> 'role') = 'staff')
+  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'staff');
 
 create policy "staff can read employee applications"
   on employee_applications
   for select
   to authenticated
-  using ((auth.jwt() -> 'user_metadata' ->> 'role') = 'staff');
+  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'staff');
 
 create policy "staff can update employee applications"
   on employee_applications
   for update
   to authenticated
-  using ((auth.jwt() -> 'user_metadata' ->> 'role') = 'staff')
-  with check ((auth.jwt() -> 'user_metadata' ->> 'role') = 'staff');
+  using  ((auth.jwt() -> 'app_metadata' ->> 'role') = 'staff')
+  with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'staff');
 
 create policy "staff can read employee documents"
   on employee_documents
   for select
   to authenticated
-  using ((auth.jwt() -> 'user_metadata' ->> 'role') = 'staff');
+  using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'staff');
 
 -- ============================================================
 -- STORAGE BUCKET (run separately in Supabase Storage settings,
