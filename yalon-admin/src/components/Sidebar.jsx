@@ -37,7 +37,11 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-top">
-        <div className="sidebar-brand">YALON</div>
+        <img
+          src="/yalon-logo.png"
+          alt="Yalon Professional Staffing Solutions"
+          style={{ width: 120, display: 'block', marginBottom: 6 }}
+        />
         <div className="sidebar-tag">Staff Dashboard</div>
       </div>
 

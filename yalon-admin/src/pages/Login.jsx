@@ -115,7 +115,13 @@ export default function Login() {
       </svg>
 
       <div className="login-card">
-        <div className="login-brand">YALON</div>
+        <div className="login-brand">
+          <img
+            src="/yalon-logo.png"
+            alt="Yalon Professional Staffing Solutions"
+            style={{ width: 160, display: 'block', marginBottom: 4 }}
+          />
+        </div>
         <div className="login-subtitle">Staff Dashboard</div>
         <div className="login-divider" />
 
